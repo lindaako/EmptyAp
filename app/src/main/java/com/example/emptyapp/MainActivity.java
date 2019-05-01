@@ -10,8 +10,9 @@ import android.widget.EditText;
 
 public class MainActivity extends AppCompatActivity
 {
-    Button mButton = (Button)findViewById(R.id.button);
-    EditText mEdit   = (EditText)findViewById(R.id.edittext);
+
+    Button mButton;
+    EditText mEdit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -20,6 +21,8 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
 
 
+        mButton = findViewById(R.id.button);
+        mEdit   = findViewById(R.id.edittext);
 
         mButton.setOnClickListener
                 (
