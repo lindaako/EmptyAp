@@ -71,14 +71,18 @@ public class ShowWebPage extends AppCompatActivity
             {
                 Toast myToast = Toast.makeText(ShowWebPage.this, url, Toast.LENGTH_SHORT);
                 myToast.show();
-/*
+
                 try
                 {
                     document = Jsoup.connect(url).get();
 
-                    Element BookAvailabilityInfo = document.select("td").first();
-                    String htmlString = BookAvailabilityInfo.toString();
+                    Element BookAvailabilityInfo = document.select("span.ikc-item-status").first();
+                    String htmlString = BookAvailabilityInfo.text();
 
+                    myBook = Toast.makeText(ShowWebPage.this, htmlString, Toast.LENGTH_SHORT);
+                    myBook.show();
+
+                    /*
                     if (htmlString.contains("Not Available") )
                     {
                         myBook = Toast.makeText(ShowWebPage.this, "Book is not Available", Toast.LENGTH_SHORT);
@@ -104,14 +108,14 @@ public class ShowWebPage extends AppCompatActivity
                             myBook.show();
                         }
 
-                    }
+                    }*/
 
                 }
                 catch (IOException e)
                 {
                     e.printStackTrace();
                     document = null;
-                }*/
+                }
             }
 
 
