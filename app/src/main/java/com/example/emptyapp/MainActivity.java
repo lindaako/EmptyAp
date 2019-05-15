@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity
                         {
                             public void onClick(View view)
                             {
-                                final String url = "https://pyxis.knu.ac.kr/en/#/search/detail/4500295/";
+                                final String url = "https://pyxis.knu.ac.kr/en/#/search/detail/4500295";
 
 
                                 Thread thread = new Thread(new Runnable()
@@ -66,18 +66,18 @@ public class MainActivity extends AppCompatActivity
                                         {
 
                                             Log.d("MainActivity", " trying... ");
-                                           document = Jsoup.connect(url)
+                                           document = Jsoup.connect(url).get();
                                             //document = Jsoup.connect("http://example.com").get();
-                                                    .data("query","Java")
-                                                    .userAgent("Mozilla")
-                                                    .cookie("auth","token")
-                                                    .timeout(3000)
-                                                    .post();
+                                                    //.data("query","Java")
+                                                    //.userAgent("Mozilla")
+                                                    //.cookie("auth","token")
+                                                    //.timeout(6000)
+                                                    //.post();
                                             Log.d("MainActivity", " Done! ");
 
                                             //Elements options = document.select("span.ikc-item-status");
-                                            //Elements options = document.getElementsByClass("span.ikc-item-status");
-                                            Elements options = document.getElementsByTag("span.ikc-item-status");
+                                            //Elements options = document.getElementsByClass("ikc-item-status");
+                                            Elements options = document.getElementsByTag("td>span");
                                                 int i = 1;
                                                 for (Element element : options)
                                                 {
