@@ -9,6 +9,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+
+import java.io.File;
 import java.io.IOException;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
@@ -33,7 +35,7 @@ public class MainActivity extends AppCompatActivity
     Button mButton;
     EditText mEdit;
     Toast myBook;
-    private Document document = null;
+    public Document document = null;
 
 
     @Override
@@ -53,34 +55,63 @@ public class MainActivity extends AppCompatActivity
                         {
                             public void onClick(View view)
                             {
-                                final String url = "https://pyxis.knu.ac.kr/en/#/search/detail/4500295";
+                                final String url = "view-source:http://pyxis.knu.ac.kr/en/#/search/detail/4500295";
+/*
+                                try {
+                                    // Connect to the web site
+                                    Document mBlogDocument = Jsoup.connect(url).get();
+                                    // Using Elements to get the Meta data
+                                    Elements mElementDataSize = mBlogDocument.select("td");
+                                    // Locate the content attribute
+                                    int mElementSize = mElementDataSize.size();
 
-                                Document doc = null;
-                                try
-                                {
-                                    doc = Jsoup.connect(url).get();
-                                } catch (IOException e)
-                                {
+                                    for (int i = 0; i < mElementSize; i++)
+                                    {
+                                        Elements mElementAuthorName = mBlogDocument.select("span[class=ikc-item-status]").select("font").eq(i);
+                                        System.out.println(mElementAuthorName.text());
+
+
+                                    }
+                                } catch (IOException e) {
                                     e.printStackTrace();
                                 }
 
+                                */
 
-                                if(doc != null)
-                                {
-                                    Elements spanTags = doc.getElementsByTag("span");
-                                    for (Element spanTag : spanTags) {
-                                        String text = spanTag.ownText();
-                                        System.out.println(text);
-                                    }
-
-                                }
-
-/*
                                 Thread thread = new Thread(new Runnable()
                                 {
                                     @Override
                                     public void run()
                                     {
+
+
+                                        try
+                                        {
+                                            // Connect to the web site
+                                            Document mBlogDocument = Jsoup.connect("https://pyxis.knu.ac.kr/#/search/detail/4500295").get();
+
+
+                                            System.out.println(mBlogDocument);
+                                            // Using Elements to get the Meta data
+                                            Elements mElementDataSize = mBlogDocument.select("div[class=ikc-pyxis-wrap]");
+                                            //System.out.println(mElementDataSize);
+                                            // Locate the content attribute
+                                            int mElementSize = mElementDataSize.size();
+                                            System.out.println(mElementSize);
+
+                                            for (int i = 0; i < mElementSize; i++)
+                                            {
+                                                Elements mElementAuthorName = mBlogDocument.select("span[class=ikc-item-status]").select("font").eq(i);
+                                                System.out.println(mElementAuthorName.text());
+
+
+                                            }
+                                        } catch (IOException e) {
+                                            e.printStackTrace();
+                                        }
+
+
+                                        /*
 
                                         try
                                         {
@@ -103,6 +134,15 @@ public class MainActivity extends AppCompatActivity
 
                                             if(document != null)
                                             {
+                                                Elements spanTags = document.select("span.ikc-item-status");
+                                                for (Element spanTag : spanTags)
+                                                {
+                                                    String text = spanTag.ownText();
+                                                    System.out.println(text);
+                                                }
+                                                Log.d("MainActivity", " Done getting data! ");
+
+
                                                 Elements top = document.select("tbody");
                                                 Elements top_1 = top.select("tr");
                                                 Elements top_2 = top_1.select("td");
@@ -145,13 +185,14 @@ public class MainActivity extends AppCompatActivity
 
                                         }
 
-
+*/
                                     }
 
 
                                 });
 
-                                thread.start();*/
+                                thread.start();
+
 
 
                             }
