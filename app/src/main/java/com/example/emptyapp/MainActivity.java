@@ -33,7 +33,8 @@ public class MainActivity extends AppCompatActivity
     Button mButton;
     EditText mEdit;
     Toast myBook;
-    Document document ;
+    private Document document = null;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -48,14 +49,33 @@ public class MainActivity extends AppCompatActivity
 
 
         mButton.setOnClickListener
-                (
-                     new View.OnClickListener()
+                (new View.OnClickListener()
                         {
                             public void onClick(View view)
                             {
                                 final String url = "https://pyxis.knu.ac.kr/en/#/search/detail/4500295";
 
+                                Document doc = null;
+                                try
+                                {
+                                    doc = Jsoup.connect(url).get();
+                                } catch (IOException e)
+                                {
+                                    e.printStackTrace();
+                                }
 
+
+                                if(doc != null)
+                                {
+                                    Elements spanTags = doc.getElementsByTag("span");
+                                    for (Element spanTag : spanTags) {
+                                        String text = spanTag.ownText();
+                                        System.out.println(text);
+                                    }
+
+                                }
+
+/*
                                 Thread thread = new Thread(new Runnable()
                                 {
                                     @Override
@@ -66,32 +86,55 @@ public class MainActivity extends AppCompatActivity
                                         {
 
                                             Log.d("MainActivity", " trying... ");
-                                           document = Jsoup.connect(url).get();
-                                            //document = Jsoup.connect("http://example.com").get();
-                                                    //.data("query","Java")
-                                                    //.userAgent("Mozilla")
-                                                    //.cookie("auth","token")
-                                                    //.timeout(6000)
-                                                    //.post();
+                                           document = Jsoup.connect(url)
+                                            //document = Jsoup.connect("http://example.com")
+                                                    .data("query","Java")
+                                                    .userAgent("Mozilla")
+                                                    .cookie("auth","token")
+                                                    .timeout(6000)
+                                                    .post();
+
                                             Log.d("MainActivity", " Done! ");
-
-                                            //Elements options = document.select("span.ikc-item-status");
-                                            //Elements options = document.getElementsByClass("ikc-item-status");
-                                            Elements options = document.getElementsByTag("td>span");
-                                                int i = 1;
-                                                for (Element element : options)
-                                                {
-                                                    //Log.d("MainActivity", "\nDone\n");
-                                                    //Log.d("MainActivity", element.text());
-                                                    System.out.println("string "+i + ": "+element.text());
-                                                    i++;
-                                                }
-
 
                                             if (document == null)
                                             {
                                                 Log.d("MainActivity", "\n The Document is empty!\n");
                                             }
+
+                                            if(document != null)
+                                            {
+                                                Elements top = document.select("tbody");
+                                                Elements top_1 = top.select("tr");
+                                                Elements top_2 = top_1.select("td");
+                                                Elements top_3 = top_2.select("span");
+                                                //Elements options = document.getElementsByClass("font");
+                                                //Elements options = document.getElementsByTag("span.ikc-item-status");
+                                                 int i = 1;
+                                                for (Element element : top_3)
+                                                {
+                                                    //Log.d("MainActivity", "\nDone\n");
+                                                    //Log.d("MainActivity", element.text());
+                                                    System.out.println("string " + i + ": " + element.text());
+                                                    i++;
+                                                }
+
+                                                Elements myElements = document.getElementsByTag("td")
+                                                        .first().getElementsByTag("span");
+                                                for (Element element : myElements)
+                                                {
+                                                    if (element.className().contains("ikc-item-status"))
+                                                    {
+                                                        String Content = element.ownText();
+
+
+                                                        System.out.println("   " + Content + " " );
+                                                    }
+                                                }
+
+
+                                            }
+
+
                                         }
                                         catch (IOException e)
                                         {
@@ -108,7 +151,23 @@ public class MainActivity extends AppCompatActivity
 
                                 });
 
-                                thread.start();
+                                thread.start();*/
+
+
+                            }
+                        });
+
+
+
+
+
+
+
+    }
+
+
+}
+
 /*
                                 if (document != null)
                                 {
@@ -137,18 +196,3 @@ public class MainActivity extends AppCompatActivity
                                 intent.putExtra("url", url);
                                 startActivity(intent);
                                 */
-
-                            }
-                        });
-
-
-
-
-
-
-
-    }
-
-
-}
-
