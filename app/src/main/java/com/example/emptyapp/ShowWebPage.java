@@ -1,6 +1,5 @@
 package com.example.emptyapp;
 
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -12,7 +11,6 @@ import android.widget.Toast;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 
 import java.io.IOException;
 
@@ -29,7 +27,7 @@ public class ShowWebPage extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_web_page);
 
-        simpleWebView = findViewById(R.id.simpleWebView);
+        simpleWebView = findViewById(R.id.browser);
         simpleWebView.setWebViewClient(new MyWebViewClient());
 
         Bundle bundle = getIntent().getExtras();
