@@ -45,6 +45,7 @@ import java.io.InputStreamReader;
 
 public class ShowWebPage extends AppCompatActivity
 {
+    int AV;
     WebView simpleWebView;
     String url;
     String url_1 = "https://pyxis.knu.ac.kr/en/#/search/detail/";
@@ -159,7 +160,7 @@ public class ShowWebPage extends AppCompatActivity
 
         menuItem = menu.findItem(R.id.UseRobotButton);
 
-        int AV = AV_INFO.getAV_INFO();
+        AV = AV_INFO.getAV_INFO();
 
 
         if (AV>0)
@@ -174,35 +175,6 @@ public class ShowWebPage extends AppCompatActivity
 
 
 
-
-
-/*
-    @Override
-    public boolean onPrepareOptionsMenu (Menu menu)
-    {
-        invalidateOptionsMenu();
-        getMenuInflater().inflate(R.menu.my_menu, menu);
-        this.menu = menu;
-
-        menuItem = menu.findItem(R.id.UseRobotButton);
-
-
-        if (menuItem != null)
-        {
-            int AV = AV_INFO.getAV_INFO();
-            Toast.makeText(ShowWebPage.this,"Its available!," + AV,Toast.LENGTH_LONG).show();
-            if (AV>0)
-            {
-                menuItem.setIcon(ContextCompat.getDrawable(this, R.drawable.robotvectorfacetransparent));
-                System.out.println(" Robot button found !");
-                Toast.makeText(ShowWebPage.this,"Its available!,",Toast.LENGTH_LONG).show();
-            }
-        }
-
-        return super.onPrepareOptionsMenu(menu);
-    }*/
-
-
     // handle button activities
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
@@ -215,8 +187,18 @@ public class ShowWebPage extends AppCompatActivity
             {
                 if ( Book_url.contains(url_1) )
                 {
-                    Toast.makeText(this, "This function is only available for the 5th floor of the University Library!", Toast.LENGTH_LONG).show();
+                    AV = AV_INFO.getAV_INFO();
 
+
+                    if (AV>0)
+                    {
+                        Toast.makeText(this, "Sending data", Toast.LENGTH_SHORT).show();
+                    }
+
+                    else
+                        {
+                        Toast.makeText(this, "This function can only be used for 'Available' books, in the 5th floor of the University Library!", Toast.LENGTH_LONG).show();
+                    }
                 }
 
                 else
