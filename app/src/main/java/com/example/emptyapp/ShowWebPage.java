@@ -143,21 +143,37 @@ public class ShowWebPage extends AppCompatActivity
         getMenuInflater().inflate(R.menu.my_menu, menu);
          this.menu = menu;
 
-
         menuItem = menu.findItem(R.id.UseRobotButton);
 
         if (menuItem != null)
         {
+
+
+        }
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu (Menu menu)
+    {
+        getMenuInflater().inflate(R.menu.my_menu, menu);
+        this.menu = menu;
+
+        menuItem = menu.findItem(R.id.UseRobotButton);
+
+
+        if (menuItem != null)
+        {
             int AV = AV_INFO.getAV_INFO();
-            //tintMenuIcon(ShowWebPage.this, menuItem, android.R.color.holo_purple);
+
             if (AV>0)
             {
                 menuItem.setIcon(ContextCompat.getDrawable(this, R.drawable.robotvectorfacetransparent));
                 System.out.println(" Robot button found !");
             }
-
         }
-        return super.onCreateOptionsMenu(menu);
+
+        return super.onPrepareOptionsMenu(menu);
     }
 
     // handle button activities
