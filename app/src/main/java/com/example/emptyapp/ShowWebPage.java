@@ -1,6 +1,7 @@
 package com.example.emptyapp;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
@@ -54,10 +55,10 @@ public class ShowWebPage extends AppCompatActivity
 
 
 
-    int Availability;
+    int Availability = 0;
     int id;
     public Menu menu;
-
+    private MenuItem photoMenuItem;
 
     MenuItem menuItem;
 
@@ -67,6 +68,8 @@ public class ShowWebPage extends AppCompatActivity
         private  static Singleton instance = null;
         private String MY_URL;
         private int AV_INFO;
+
+
 
         protected Singleton()
         {
@@ -83,14 +86,18 @@ public class ShowWebPage extends AppCompatActivity
             this.AV_INFO=av;
         }
 
+
+
+
         public String getString()
         {
             return this.MY_URL;
         }
         public int getAV_INFO()
-        {
-            return this.AV_INFO;
-        }
+    {
+        return this.AV_INFO;
+    }
+
 
         public static Singleton getInstance()
         {
@@ -136,6 +143,13 @@ public class ShowWebPage extends AppCompatActivity
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
+
+
+
+
+
+
+
     // create an action bar button
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
@@ -145,17 +159,28 @@ public class ShowWebPage extends AppCompatActivity
 
         menuItem = menu.findItem(R.id.UseRobotButton);
 
-        if (menuItem != null)
-        {
+        int AV = AV_INFO.getAV_INFO();
 
+
+        if (AV>0)
+        {
+            menuItem.setIcon(ContextCompat.getDrawable(this, R.drawable.robotvectorfacetransparent));
+            System.out.println(" Button Functionality ON !");
 
         }
+
         return super.onCreateOptionsMenu(menu);
     }
 
+
+
+
+
+/*
     @Override
     public boolean onPrepareOptionsMenu (Menu menu)
     {
+        invalidateOptionsMenu();
         getMenuInflater().inflate(R.menu.my_menu, menu);
         this.menu = menu;
 
@@ -165,16 +190,18 @@ public class ShowWebPage extends AppCompatActivity
         if (menuItem != null)
         {
             int AV = AV_INFO.getAV_INFO();
-
+            Toast.makeText(ShowWebPage.this,"Its available!," + AV,Toast.LENGTH_LONG).show();
             if (AV>0)
             {
                 menuItem.setIcon(ContextCompat.getDrawable(this, R.drawable.robotvectorfacetransparent));
                 System.out.println(" Robot button found !");
+                Toast.makeText(ShowWebPage.this,"Its available!,",Toast.LENGTH_LONG).show();
             }
         }
 
         return super.onPrepareOptionsMenu(menu);
-    }
+    }*/
+
 
     // handle button activities
     @Override
@@ -205,7 +232,7 @@ public class ShowWebPage extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_web_page);
-
+        //VersionHelper.refreshActionBarMenu(ShowWebPage.this);
         simpleWebView = findViewById(R.id.browser);
         simpleWebView.setWebViewClient(new MyWebViewClient());
         verifyPermissions();
@@ -251,9 +278,7 @@ public class ShowWebPage extends AppCompatActivity
             if ( url.contains(url_1) )
             {
                 MY_URL.setString(url);
-                Toast myToast = Toast.makeText(ShowWebPage.this, url, Toast.LENGTH_SHORT);
-                myToast.show();
-
+                //Toast.makeText(ShowWebPage.this, url, Toast.LENGTH_SHORT).show();
 
 
                 //Then download the webpage and call it FILE_NAME = "Detail_Kyungpook.html";
@@ -282,31 +307,23 @@ public class ShowWebPage extends AppCompatActivity
                             //System.out.println(mElementDataSize);
                             // Locate the content attribute
                             int mElementSize = mElementDataSize.size();
-                            System.out.println(mElementSize);
+                            //System.out.println(mElementSize);
 
 
                             for (int i = 0; i < mElementSize; i++)
                             {
                                 Element BookStatusData = mBlogDocument.select("span.ikc-item-status").get(i);
-                                System.out.println(BookStatusData.text());
+                                //System.out.println(BookStatusData.text());
                                 if(BookStatusData.text().equals("Available"))
                                 {
                                     Availability++;
                                     AV_INFO.setAV_INFO(Availability);
+                                    invalidateOptionsMenu();
+
 
                                     if (Availability == 1)
                                     {
-
-                                                //tintMenuIcon(ShowWebPage.this, menuItem, android.R.color.holo_purple);
-                                                //menuItem.setIcon(ContextCompat.getDrawable(ShowWebPage.this, R.drawable.robotvectorfacetransparent));
-
-                                                //SetMenuIcon();
-
-                                                //homie = findViewById(id);
-                                                //System.out.println(" Robot button found !" + homie);
-
-
-
+                                        System.out.println("The first available book is of index " + i);
                                     }
 
                                 }
