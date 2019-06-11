@@ -192,7 +192,7 @@ public class ShowWebPage extends AppCompatActivity
 
                     if (AV>0)
                     {
-                        Toast.makeText(this, "Sending data", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Sending data...", Toast.LENGTH_SHORT).show();
                     }
 
                     else
@@ -329,6 +329,14 @@ public class ShowWebPage extends AppCompatActivity
 
 
             }
+
+            else
+                {
+                    Availability = 0;
+                    AV_INFO.setAV_INFO(Availability);
+                    invalidateOptionsMenu();
+                }
+
 
 
             super.onPageFinished(view, url);
