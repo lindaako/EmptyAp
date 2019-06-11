@@ -202,7 +202,7 @@ public class ShowWebPage extends AppCompatActivity
                 }
 
                 else
-                    Toast.makeText(this, "Please Choose a Book!", Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, "Please Select a Book!", Toast.LENGTH_LONG).show();
                 // do something here
             }
 
