@@ -53,6 +53,7 @@ public class ShowWebPage extends AppCompatActivity
     private static final int REQUEST_CODE = 2424;
 
 
+
     int Availability;
     int id;
     public Menu menu;
@@ -65,6 +66,7 @@ public class ShowWebPage extends AppCompatActivity
     {
         private  static Singleton instance = null;
         private String MY_URL;
+        private int AV_INFO;
 
         protected Singleton()
         {
@@ -76,10 +78,18 @@ public class ShowWebPage extends AppCompatActivity
         {
             this.MY_URL=s;
         }
+        public void setAV_INFO(int av)
+        {
+            this.AV_INFO=av;
+        }
 
         public String getString()
         {
             return this.MY_URL;
+        }
+        public int getAV_INFO()
+        {
+            return this.AV_INFO;
         }
 
         public static Singleton getInstance()
@@ -93,6 +103,7 @@ public class ShowWebPage extends AppCompatActivity
     }
 
     Singleton MY_URL = Singleton.getInstance();
+    Singleton AV_INFO = Singleton.getInstance();
 
     private void verifyPermissions()
     {
@@ -132,57 +143,41 @@ public class ShowWebPage extends AppCompatActivity
         getMenuInflater().inflate(R.menu.my_menu, menu);
          this.menu = menu;
 
+
         menuItem = menu.findItem(R.id.UseRobotButton);
 
         if (menuItem != null)
         {
+            int AV = AV_INFO.getAV_INFO();
             //tintMenuIcon(ShowWebPage.this, menuItem, android.R.color.holo_purple);
-            //menuItem.setIcon(ContextCompat.getDrawable(this, R.drawable.robotvectorfacetransparent));
-            if (Availability == 1)
+            if (AV>0)
+            {
+                menuItem.setIcon(ContextCompat.getDrawable(this, R.drawable.robotvectorfacetransparent));
                 System.out.println(" Robot button found !");
+            }
 
         }
         return super.onCreateOptionsMenu(menu);
     }
-
-/*
-    public void doThis(MenuItem item)
-    {
-        Toast.makeText(this, "This function is only available for the 5th floor!", Toast.LENGTH_LONG).show();
-    }*/
-
-
-
-
-    public void SetMenuIcon(MenuItem item)
-    {
-        id = item.getItemId();
-
-        if (id == R.id.UseRobotButton)
-        {
-            Toast.makeText(this, "Robot button found !", Toast.LENGTH_LONG).show();
-            menuItem.setIcon(ContextCompat.getDrawable(this, R.drawable.robotvectorfacetransparent));
-            // do something here
-        }
-
-    }
-
-
 
     // handle button activities
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
         id = item.getItemId();
+        String Book_url = MY_URL.getString();
 
 
             if (id == R.id.UseRobotButton)
             {
-                if ( url.contains(url_1) )
-                    Toast.makeText(this, "This function is only available for the 5th floor!", Toast.LENGTH_LONG).show();
+                if ( Book_url.contains(url_1) )
+                {
+                    Toast.makeText(this, "This function is only available for the 5th floor of the University Library!", Toast.LENGTH_LONG).show();
+
+                }
 
                 else
-                    Toast.makeText(this, url, Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, "Please Choose a Book!", Toast.LENGTH_LONG).show();
                 // do something here
             }
 
@@ -198,6 +193,7 @@ public class ShowWebPage extends AppCompatActivity
         simpleWebView = findViewById(R.id.browser);
         simpleWebView.setWebViewClient(new MyWebViewClient());
         verifyPermissions();
+        AV_INFO.setAV_INFO(0);
 
         Bundle bundle = getIntent().getExtras();
 
@@ -212,6 +208,7 @@ public class ShowWebPage extends AppCompatActivity
             errorToast.show();
         }
 
+        MY_URL.setString(url);
         simpleWebView.getSettings().setJavaScriptEnabled(true);
         simpleWebView.loadUrl(url); // load a web page in a web view
 
@@ -237,6 +234,7 @@ public class ShowWebPage extends AppCompatActivity
 
             if ( url.contains(url_1) )
             {
+                MY_URL.setString(url);
                 Toast myToast = Toast.makeText(ShowWebPage.this, url, Toast.LENGTH_SHORT);
                 myToast.show();
 
@@ -278,6 +276,8 @@ public class ShowWebPage extends AppCompatActivity
                                 if(BookStatusData.text().equals("Available"))
                                 {
                                     Availability++;
+                                    AV_INFO.setAV_INFO(Availability);
+
                                     if (Availability == 1)
                                     {
 
