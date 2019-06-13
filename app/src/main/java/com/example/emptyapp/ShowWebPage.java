@@ -3,6 +3,7 @@ package com.example.emptyapp;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
@@ -57,19 +58,14 @@ public class ShowWebPage extends AppCompatActivity
     TextView contentView ;
     String url;
     String url_1 = "https://pyxis.knu.ac.kr/en/#/search/detail/";
-    Document document = null;
-    Toast myBook;
     private static final String FILE_NAME = "Detail_Kyungpook.html";
     private static final int REQUEST_CODE = 2424;
-
-    int done_once = 0;
     int line_counter = 0;
     int Availability = 0;
     int id;
     public Menu menu;
-    private MenuItem photoMenuItem;
-
     MenuItem menuItem;
+    String result[] = new String[500];
 
 
     public static class Singleton
@@ -77,8 +73,6 @@ public class ShowWebPage extends AppCompatActivity
         private  static Singleton instance = null;
         private String MY_URL;
         private int AV_INFO;
-
-
 
         protected Singleton()
         {
@@ -94,9 +88,6 @@ public class ShowWebPage extends AppCompatActivity
         {
             this.AV_INFO=av;
         }
-
-
-
 
         public String getString()
         {
@@ -190,29 +181,9 @@ public class ShowWebPage extends AppCompatActivity
         id = item.getItemId();
         String Book_url = MY_URL.getString();
 
-
-            if (id == R.id.UseRobotButton)
-            {
-                if ( Book_url.contains(url_1) )
-                {
-                    AV = AV_INFO.getAV_INFO();
-
-
-                    if (AV>0)
-                    {
-                        Toast.makeText(this, "Sending data...", Toast.LENGTH_SHORT).show();
-                    }
-
-                    else
-                        {
-                        Toast.makeText(this, "This function can only be used for 'Available' books, in the 5th floor of the University Library!", Toast.LENGTH_LONG).show();
-                    }
-                }
-
-                else
-                    Toast.makeText(this, "Please Select a Book!", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "Please Select a Book!", Toast.LENGTH_LONG).show();
                 // do something here
-            }
+
 
         return super.onOptionsItemSelected(item);
     }
@@ -242,7 +213,7 @@ public class ShowWebPage extends AppCompatActivity
 
                     BufferedReader br = new BufferedReader(new StringReader(content));
 
-                    String result[] = new String[500];
+
                     String line = "";
 
 
@@ -263,25 +234,7 @@ public class ShowWebPage extends AppCompatActivity
                         line_counter++;
                     }
 
-                    //Toast.makeText(MainActivity.this,result[62],Toast.LENGTH_LONG).show();
 
-                    for(int cc = 0; cc < line_counter; cc++)
-                    {
-
-                        if (result[cc].contains("Status\tAvailable"))
-                        {
-                            // Toast.makeText(MainActivity.this, "The index of status is = " + result[cc], Toast.LENGTH_LONG).show();
-                            Availability++;
-                        }
-
-                        else
-
-                        {
-
-                        }
-                    }
-
-                    Toast.makeText(ShowWebPage.this, Availability + " books available", Toast.LENGTH_LONG).show();
 
                 }
             });
@@ -320,7 +273,8 @@ public class ShowWebPage extends AppCompatActivity
 
 
         MY_URL.setString(url);
-        WebSettings webSettings =simpleWebView.getSettings();
+
+        WebSettings webSettings = simpleWebView.getSettings();
         webSettings.setDomStorageEnabled(true);
         webSettings.setAppCacheEnabled(true);
         webSettings.setLoadsImagesAutomatically(true);
@@ -344,9 +298,8 @@ public class ShowWebPage extends AppCompatActivity
 
 
         simpleWebView.setScrollBarStyle(WebView.SCROLLBARS_OUTSIDE_OVERLAY);
+        simpleWebView.addJavascriptInterface(new MyJavaScriptInterface(contentView), "INTERFACE");
         simpleWebView.setWebViewClient(new MyWebViewClient());
-        //simpleWebView.addJavascriptInterface(new MyJavaScriptInterface(contentView), "INTERFACE");
-
         simpleWebView.clearCache(true);
         MY_URL.setString(url);
         simpleWebView.loadUrl(url); // load a web page in a web view
@@ -372,54 +325,32 @@ public class ShowWebPage extends AppCompatActivity
         public void onPageFinished(WebView view, String url)
         {
             Log.d("WebView", "your current url when webpage loading.. finish " + url);
-            //simpleWebView.addJavascriptInterface(new MyJavaScriptInterface(contentView), "INTERFACE");
 
 
-/*
+            MY_URL.setString(url);
 
-            if ( url.contains(url_1) && done_once<1 )
-
+            try
             {
-                MY_URL.setString(url);
-                simpleWebView = findViewById(R.id.browser);
-                contentView =  findViewById(R.id.contentView);
+                synchronized(this)
+                {
+                    wait(1000);
+                }
+            }
 
-                simpleWebView.addJavascriptInterface(new MyJavaScriptInterface(contentView), "INTERFACE");
-                simpleWebView.clearCache(true);
+            catch(InterruptedException ex)
+            {
 
-                simpleWebView.loadUrl(url); // load a web page in a web view
+            }
 
-                //Toast.makeText(ShowWebPage.this, "Found", Toast.LENGTH_LONG).show();
-                done_once++;
-
-            }*/
-
-
+            simpleWebView.loadUrl("javascript:window.INTERFACE.processContent(document.getElementsByTagName('body')[0].innerText);");
 
             if ( url.contains(url_1) )
 
             {
-                MY_URL.setString(url);
-                simpleWebView = findViewById(R.id.browser);
-                contentView =  findViewById(R.id.contentView);
-
-                simpleWebView.addJavascriptInterface(new MyJavaScriptInterface(contentView), "INTERFACE");
-
-
-                try
-                {
-                    synchronized(this)
-                    {
-                        wait(500);
-                    }
-                }
-
-                catch(InterruptedException ex)
-                {
-
-                }
-
-                simpleWebView.loadUrl("javascript:window.INTERFACE.processContent(document.getElementsByTagName('body')[0].innerText);");
+                Intent intent = new Intent(getApplicationContext(), ShowWebPage2.class);
+                intent.putExtra("url", url);
+                intent.putExtra("RES", result);
+                startActivity(intent);
                 //Toast.makeText(ShowWebPage.this, "Found", Toast.LENGTH_LONG).show();
 
 
