@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity
                             {
 
                                 String query = mEdit.getText().toString();
-                                String url = "https://pyxis.knu.ac.kr/en/#/search/ex?all=1%7Ck%7Ca%7C" + query + "&rq=BRANCH%3D1";
+                                String url = "https://pyxis.knu.ac.kr/en/#/search/ex?all=1%7Ck%7Ca%7C" + query + "&rq=BRANCH%3D1%7CMATERIAL_TYPE%3D1";
 
                                 Intent intent = new Intent(getApplicationContext(), ShowWebPage.class);
                                 intent.putExtra("url", url);
