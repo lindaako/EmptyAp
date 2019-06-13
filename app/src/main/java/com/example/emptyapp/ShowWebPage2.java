@@ -86,7 +86,7 @@ public class ShowWebPage2 extends AppCompatActivity
 
                 else
                 {
-                    Toast.makeText(this, "This function can only be used for 'Available' books, in the 5th floor of the University Library!", Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, "This function can only be used for 'Available' books, on the 2nd floor of the University Library!", Toast.LENGTH_LONG).show();
                 }
 
         }
