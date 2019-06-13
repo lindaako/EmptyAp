@@ -3,6 +3,7 @@ package com.example.emptyapp;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
@@ -20,13 +21,18 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.content.res.AppCompatResources;
 import android.util.Log;
+import android.view.Display;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.WindowManager;
+import android.webkit.JavascriptInterface;
+import android.webkit.ValueCallback;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.jsoup.Jsoup;
@@ -40,13 +46,15 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
-
+import java.io.StringReader;
+import java.lang.reflect.Method;
 
 
 public class ShowWebPage extends AppCompatActivity
 {
     int AV;
     WebView simpleWebView;
+    TextView contentView ;
     String url;
     String url_1 = "https://pyxis.knu.ac.kr/en/#/search/detail/";
     Document document = null;
@@ -54,8 +62,8 @@ public class ShowWebPage extends AppCompatActivity
     private static final String FILE_NAME = "Detail_Kyungpook.html";
     private static final int REQUEST_CODE = 2424;
 
-
-
+    int done_once = 0;
+    int line_counter = 0;
     int Availability = 0;
     int id;
     public Menu menu;
@@ -209,14 +217,90 @@ public class ShowWebPage extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
+    public class MyJavaScriptInterface
+    {
+        private TextView contentView ;
+
+        public MyJavaScriptInterface(TextView aContentView)
+        {
+            contentView = aContentView;
+        }
+
+        @SuppressWarnings("unused")
+        @JavascriptInterface
+        public void processContent(String aContent)
+        {
+            final String content = aContent;
+            contentView.post(new Runnable()
+            {
+                public void run()
+                {
+
+
+                    contentView.setText(content);
+                    System.out.print(content);
+
+                    BufferedReader br = new BufferedReader(new StringReader(content));
+
+                    String result[] = new String[500];
+                    String line = "";
+
+
+                    while (true)
+                    {
+                        try
+                        {
+                            if (!((line = br.readLine()) != null))
+                                break;
+                        }
+                        catch (IOException e)
+                        {
+                            e.printStackTrace();
+                        }
+
+
+                        result[line_counter] = line;
+                        line_counter++;
+                    }
+
+                    //Toast.makeText(MainActivity.this,result[62],Toast.LENGTH_LONG).show();
+
+                    for(int cc = 0; cc < line_counter; cc++)
+                    {
+
+                        if (result[cc].contains("Status\tAvailable"))
+                        {
+                            // Toast.makeText(MainActivity.this, "The index of status is = " + result[cc], Toast.LENGTH_LONG).show();
+                            Availability++;
+                        }
+
+                        else
+
+                        {
+
+                        }
+                    }
+
+                    Toast.makeText(ShowWebPage.this, Availability + " books available", Toast.LENGTH_LONG).show();
+
+                }
+            });
+        }
+
+
+    }
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_web_page);
-        //VersionHelper.refreshActionBarMenu(ShowWebPage.this);
+
         simpleWebView = findViewById(R.id.browser);
-        simpleWebView.setWebViewClient(new MyWebViewClient());
+        contentView =  findViewById(R.id.contentView);
+
         verifyPermissions();
         AV_INFO.setAV_INFO(0);
 
@@ -233,16 +317,49 @@ public class ShowWebPage extends AppCompatActivity
             errorToast.show();
         }
 
+
+
         MY_URL.setString(url);
-        simpleWebView.getSettings().setJavaScriptEnabled(true);
+        WebSettings webSettings =simpleWebView.getSettings();
+        webSettings.setDomStorageEnabled(true);
+        webSettings.setAppCacheEnabled(true);
+        webSettings.setLoadsImagesAutomatically(true);
+        webSettings.setJavaScriptEnabled(true);
+        try {
+            Method m = WebSettings.class.getMethod("setMixedContentMode", int.class);
+            if ( m == null )
+            {
+                Log.e("WebSettings", "Error getting setMixedContentMode method");
+            }
+            else {
+                m.invoke(webSettings, 2); // 2 = MIXED_CONTENT_COMPATIBILITY_MODE
+                Log.i("WebSettings", "Successfully set MIXED_CONTENT_COMPATIBILITY_MODE");
+            }
+        }
+        catch (Exception ex) {
+            Log.e("WebSettings", "Error calling setMixedContentMode: " + ex.getMessage(), ex);
+        }
+
+
+
+
+        simpleWebView.setScrollBarStyle(WebView.SCROLLBARS_OUTSIDE_OVERLAY);
+        simpleWebView.setWebViewClient(new MyWebViewClient());
+        //simpleWebView.addJavascriptInterface(new MyJavaScriptInterface(contentView), "INTERFACE");
+
+        simpleWebView.clearCache(true);
+        MY_URL.setString(url);
         simpleWebView.loadUrl(url); // load a web page in a web view
 
 
 
     }
 
-    private class MyWebViewClient extends WebViewClient
+    public  class MyWebViewClient extends WebViewClient
     {
+
+
+
         @Override
         public void onPageStarted(WebView view, String url, Bitmap favicon)
         {
@@ -255,81 +372,58 @@ public class ShowWebPage extends AppCompatActivity
         public void onPageFinished(WebView view, String url)
         {
             Log.d("WebView", "your current url when webpage loading.. finish " + url);
+            //simpleWebView.addJavascriptInterface(new MyJavaScriptInterface(contentView), "INTERFACE");
+
+
+/*
+
+            if ( url.contains(url_1) && done_once<1 )
+
+            {
+                MY_URL.setString(url);
+                simpleWebView = findViewById(R.id.browser);
+                contentView =  findViewById(R.id.contentView);
+
+                simpleWebView.addJavascriptInterface(new MyJavaScriptInterface(contentView), "INTERFACE");
+                simpleWebView.clearCache(true);
+
+                simpleWebView.loadUrl(url); // load a web page in a web view
+
+                //Toast.makeText(ShowWebPage.this, "Found", Toast.LENGTH_LONG).show();
+                done_once++;
+
+            }*/
+
 
 
             if ( url.contains(url_1) )
+
             {
                 MY_URL.setString(url);
-                //Toast.makeText(ShowWebPage.this, url, Toast.LENGTH_SHORT).show();
+                simpleWebView = findViewById(R.id.browser);
+                contentView =  findViewById(R.id.contentView);
+
+                simpleWebView.addJavascriptInterface(new MyJavaScriptInterface(contentView), "INTERFACE");
 
 
-                //Then download the webpage and call it FILE_NAME = "Detail_Kyungpook.html";
-
-                File My_File = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), FILE_NAME);//if ready then create a file for external
-
-
-                Thread thread = new Thread(new Runnable()
+                try
                 {
-                    @Override
-                    public void run()
+                    synchronized(this)
                     {
-                        /* An instance of this class will be registered as a JavaScript interface */
-
-
-                        try
-                        {
-                            // Connect to the web site
-
-                            File input = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), FILE_NAME);
-                            Document mBlogDocument = Jsoup.parse(input, "UTF-8", url_1);
-                            //System.out.println(mBlogDocument);
-
-                            // Using Elements to get the Meta data
-                            Elements mElementDataSize = mBlogDocument.select("span[class=ikc-item-status]");
-                            //System.out.println(mElementDataSize);
-                            // Locate the content attribute
-                            int mElementSize = mElementDataSize.size();
-                            //System.out.println(mElementSize);
-
-
-                            for (int i = 0; i < mElementSize; i++)
-                            {
-                                Element BookStatusData = mBlogDocument.select("span.ikc-item-status").get(i);
-                                //System.out.println(BookStatusData.text());
-                                if(BookStatusData.text().equals("Available"))
-                                {
-                                    Availability++;
-                                    AV_INFO.setAV_INFO(Availability);
-                                    invalidateOptionsMenu();
-
-
-                                    if (Availability == 1)
-                                    {
-                                        System.out.println("The first available book is of index " + i);
-                                    }
-
-                                }
-
-                            }
-
-                        }
-                        catch (IOException e)
-                        {
-                            e.printStackTrace();
-                        }
-
-                        System.out.println(Availability + " Available books!");
+                        wait(500);
                     }
+                }
 
+                catch(InterruptedException ex)
+                {
 
-                });
+                }
 
-                thread.start();
-
+                simpleWebView.loadUrl("javascript:window.INTERFACE.processContent(document.getElementsByTagName('body')[0].innerText);");
+                //Toast.makeText(ShowWebPage.this, "Found", Toast.LENGTH_LONG).show();
 
 
             }
-
             else
                 {
                     Availability = 0;
