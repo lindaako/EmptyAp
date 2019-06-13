@@ -156,7 +156,7 @@ public class ShowWebPage2 extends AppCompatActivity
                 {
                     synchronized(this)
                     {
-                        wait(1000);
+                        wait(300);
                     }
                 }
 
