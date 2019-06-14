@@ -537,10 +537,6 @@ public class ShowWebPage2 extends AppCompatActivity
                                 JK=JK.substring(0,JK.indexOf(" /"));
 
 
-
-
-
-
                                 for(int b = 0; b < results2.length; b++)
                                 {
                                     if(results2[b] != null)

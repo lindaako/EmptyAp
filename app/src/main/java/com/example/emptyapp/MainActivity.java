@@ -24,15 +24,15 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import android.webkit.WebView;
 import android.widget.TextView;
-import android.widget.Toolbar;
+import android.support.v7.widget.Toolbar;
 
 public class MainActivity extends AppCompatActivity
 
 {
-
     Button mButton;
     EditText mEdit;
     public Document document = null;
+    Toolbar myToolbar;
 
 
     @Override

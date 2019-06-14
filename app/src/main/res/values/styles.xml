@@ -2,7 +2,7 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light">
         <!-- This is the styling for action bar -->
-        <item name="actionBarStyle">@style/MyActionBar</item>
+        <item name="actionBarStyle">@style/ToolbarTheme</item>
     </style>
 
     <style name="MyActionBar" parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
@@ -10,11 +10,14 @@
         <item name="titleTextStyle">@style/MyActionBarTitle</item>
     </style>
 
-    <style name="ToolbarTheme" parent="ThemeOverlay.AppCompat.Light">
+    <style name="ToolbarTheme" parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
+        <item name="background">@color/cardview_dark_background</item>
+        <item name="titleTextStyle">@style/MyActionBarTitle</item>
         <item name="android:fontFamily">@font/emilycandy</item>
     </style>
 
     <style name="MyActionBarTitle" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
         <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:fontFamily">@font/emilycandy</item>
     </style>
 </resources>
