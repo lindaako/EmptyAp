@@ -73,6 +73,7 @@ public class ShowWebPage extends AppCompatActivity
         private  static Singleton instance = null;
         private String MY_URL;
         private int AV_INFO;
+        private int FLOOR_NUMBER;
 
         protected Singleton()
         {
@@ -88,15 +89,25 @@ public class ShowWebPage extends AppCompatActivity
         {
             this.AV_INFO=av;
         }
+        public void setFLOOR_NUMBER(int FN)
+        {
+            this.FLOOR_NUMBER=FN;
+        }
 
         public String getString()
         {
             return this.MY_URL;
         }
+
         public int getAV_INFO()
-    {
-        return this.AV_INFO;
-    }
+        {
+            return this.AV_INFO;
+        }
+
+        public int getFLOOR_NUMBER()
+        {
+            return this.FLOOR_NUMBER;
+        }
 
 
         public static Singleton getInstance()
@@ -111,6 +122,7 @@ public class ShowWebPage extends AppCompatActivity
 
     Singleton MY_URL = Singleton.getInstance();
     Singleton AV_INFO = Singleton.getInstance();
+    Singleton FLOOR_NUMBER = Singleton.getInstance();
 
     private void verifyPermissions()
     {

@@ -64,6 +64,7 @@ public class ShowWebPage2 extends AppCompatActivity
     int Availability = 0;
     String JK;
 
+    int FN;
     int AV;
     String url;
     String results2[] = new String[500];
@@ -74,6 +75,7 @@ public class ShowWebPage2 extends AppCompatActivity
 
     ShowWebPage.Singleton MY_URL = ShowWebPage.Singleton.getInstance();
     ShowWebPage.Singleton AV_INFO = ShowWebPage.Singleton.getInstance();
+    ShowWebPage.Singleton FLOOR_NUMBER = ShowWebPage.Singleton.getInstance();
 
     private void checkBTPermissions()
     {
@@ -351,9 +353,10 @@ public class ShowWebPage2 extends AppCompatActivity
         menuItem = menu.findItem(R.id.UseRobotButton);
 
         AV = AV_INFO.getAV_INFO();
+        FN = FLOOR_NUMBER.getFLOOR_NUMBER();
 
 
-        if (AV>0)
+        if ((AV>0) && (FN == 2))
         {
             menuItem.setIcon(ContextCompat.getDrawable(this, R.drawable.robotvectorfacetransparent));
             System.out.println(" Button Functionality ON !");
@@ -377,9 +380,10 @@ public class ShowWebPage2 extends AppCompatActivity
         {
 
                 AV = AV_INFO.getAV_INFO();
+                FN = FLOOR_NUMBER.getFLOOR_NUMBER();
 
 
-                if (AV>0)
+                if ((AV>0) && (FN == 2))
                 {
                     Toast.makeText(this, "Sending data...", Toast.LENGTH_SHORT).show();
 
@@ -399,7 +403,11 @@ public class ShowWebPage2 extends AppCompatActivity
 
                 else
                 {
-                    Toast.makeText(this, "This function can only be used for 'Available' books, on the 2nd floor of the University Library!", Toast.LENGTH_LONG).show();
+                    if ((AV>0))
+                        Toast.makeText(this, "The book is not on the 2nd floor of the University Library!", Toast.LENGTH_LONG).show();
+
+                    else
+                        Toast.makeText(this, "This book is unavailable!", Toast.LENGTH_LONG).show();
                 }
 
         }
@@ -538,21 +546,33 @@ public class ShowWebPage2 extends AppCompatActivity
                                     if(results2[b] != null)
                                     {
 
-                                        if (results2[b].contains(JK))
+                                        if (results2[b].contains(JK) || ((Arrays.asList(result).contains("Status Available"))) )
                                         {
                                             //Toast.makeText(ShowWebPage2.this, "found it at "+ b +" = " + results2[b], Toast.LENGTH_LONG).show();
 
                                             for(int bb = 0; bb < 5; bb++)
                                             {
-                                                if ((results2[b+bb].contains("] Available")))
+                                                if ((results2[b+bb].contains("] Available")) || (Arrays.asList(result).contains("Status Available")))
                                                 {
                                                     invalidateOptionsMenu();
                                                     Availability++;
                                                     AV_INFO.setAV_INFO(Availability);
-                                                    Toast.makeText(ShowWebPage2.this, "It is available!", Toast.LENGTH_LONG).show();
+                                                    Toast.makeText(ShowWebPage2.this, "This item is in the library", Toast.LENGTH_LONG).show();
                                                     Request_Mark = result[cc + 1].replace("청구기호","");
-                                                    Toast.makeText(ShowWebPage2.this, Request_Mark, Toast.LENGTH_LONG).show();
-                                                    //Request_Mark = results2[b+bb].replace(" ] Available","");
+                                                    //Toast.makeText(ShowWebPage2.this, Request_Mark, Toast.LENGTH_LONG).show();
+
+
+                                                    if (Arrays.asList(result).contains("Collected location\t2층 인문학자료실"))
+                                                    {
+                                                        FLOOR_NUMBER.setFLOOR_NUMBER(2);
+                                                        Toast.makeText(ShowWebPage2.this, "You can now use the library robot!", Toast.LENGTH_LONG).show();
+                                                        //Toast.makeText(ShowWebPage2.this, "2층 인문학자료실", Toast.LENGTH_LONG).show();
+                                                    }
+                                                    else
+                                                    {
+                                                        FLOOR_NUMBER.setFLOOR_NUMBER(0);
+                                                    }
+
                                                 }
 
                                             }
