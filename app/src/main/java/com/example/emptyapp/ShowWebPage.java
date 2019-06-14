@@ -333,7 +333,7 @@ public class ShowWebPage extends AppCompatActivity
             {
                 synchronized(this)
                 {
-                    wait(1000);
+                    wait(600);
                 }
             }
 
