@@ -542,7 +542,7 @@ public class ShowWebPage2 extends AppCompatActivity
                                     if(results2[b] != null)
                                     {
 
-                                        if (results2[b].contains(JK) || ((Arrays.asList(result).contains("Status Available"))) )
+                                        if (results2[b].contains(JK) || ((Arrays.asList(result).contains("Status    Available"))) )
                                         {
                                             //Toast.makeText(ShowWebPage2.this, "found it at "+ b +" = " + results2[b], Toast.LENGTH_LONG).show();
 
@@ -554,15 +554,15 @@ public class ShowWebPage2 extends AppCompatActivity
                                                     Availability++;
                                                     AV_INFO.setAV_INFO(Availability);
                                                     Toast.makeText(ShowWebPage2.this, "This item is in the library", Toast.LENGTH_LONG).show();
-                                                    Request_Mark = result[cc + 1].replace("청구기호","");
+                                                    Request_Mark = result[cc + 1].replace("청구기호\t","");
                                                     //Toast.makeText(ShowWebPage2.this, Request_Mark, Toast.LENGTH_LONG).show();
 
 
                                                     if (Arrays.asList(result).contains("Collected location\t2층 인문학자료실"))
                                                     {
-                                                        FLOOR_NUMBER.setFLOOR_NUMBER(2);
+
                                                         Toast.makeText(ShowWebPage2.this, "You can now use the library robot!", Toast.LENGTH_LONG).show();
-                                                        //Toast.makeText(ShowWebPage2.this, "2층 인문학자료실", Toast.LENGTH_LONG).show();
+                                                        FLOOR_NUMBER.setFLOOR_NUMBER(2);
                                                     }
                                                     else
                                                     {
