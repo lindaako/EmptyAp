@@ -554,8 +554,9 @@ public class ShowWebPage2 extends AppCompatActivity
                                                     Availability++;
                                                     AV_INFO.setAV_INFO(Availability);
                                                     Toast.makeText(ShowWebPage2.this, "This item is in the library", Toast.LENGTH_LONG).show();
-                                                    Request_Mark = result[cc + 1].replace("청구기호\t","");
-                                                    //Toast.makeText(ShowWebPage2.this, Request_Mark, Toast.LENGTH_LONG).show();
+                                                    String RM =result[cc + 1].replace("청구기호\t","");
+                                                    Request_Mark = RM.replace("\t","");
+                                                    Toast.makeText(ShowWebPage2.this, Request_Mark, Toast.LENGTH_LONG).show();
 
 
                                                     if (Arrays.asList(result).contains("Collected location\t2층 인문학자료실"))
